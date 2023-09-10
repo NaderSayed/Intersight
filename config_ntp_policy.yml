@@ -1,0 +1,32 @@
+---
+#System installed with ansible-galaxy collection cisco.intersight
+- hosts: "localhost"
+  connection: local
+  gather_facts: false
+  vars:
+    #Enter the location of secret.txt with Intersight Secret Key
+    api_private_key: "API-KEY-FILE-LOCATION"
+    #Enter the API Key ID from Intersight
+    api_key_id: "API-KEY-ID"
+    #eNTER THE iNTERSIGHT api uri
+    api_uri: "https://pva.dc.local/api/v1"
+    #Enter the Organization
+    org_name: POD01
+    # Enter the Policy Name
+    policy_name: Ansible-ntp-policy
+    # present for Create/Update Policy.absent for delete Policy
+    ops: present
+  tasks:
+    - name: Configure NTP Policy
+      cisco.intersight.intersight_ntp_policy:
+         api_private_key: "{{ api_private_key }}"
+         api_key_id: "{{ api_key_id }}"
+         api_uri: "{{ api_uri }}"
+         organization: "{{ org_name }}"
+         name: "{{ policy_name }}"
+         description: NTP policy using Ansible.
+         ntp_servers:
+            - pool.ntp.org
+         timezone: America/Los_Angeles
+         validate_certs: False
+         state: "{{ ops }}"
